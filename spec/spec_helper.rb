@@ -8,7 +8,7 @@ require 'bloxl'
 RSpec::Matchers.define :be_sheet_of do |*expected_rows|
   match do |sheet|
     # FIXME haha
-    path = 'tmp/spec.xlsx'
+    path = xlsx_path
     Axlsx::Package.new(workbook: sheet.workbook).serialize(path)
     @actual = Roo::Spreadsheet.open(path).sheet(0).to_a
     @actual == expected_rows
