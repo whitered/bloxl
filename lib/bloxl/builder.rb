@@ -31,47 +31,17 @@ module BloXL
     end
 
     def stack
-      r_before, c_before = @r, @c
-      max_r_before, max_c_before = @max_r, @max_c
-      mode_before = @mode
-
-      @mode = :stack
-      @max_r = @r
-      @max_c = @c
-
+      state = switch_state :stack
       yield
     ensure
-      # only r should have been shifted after stack building
-      dr = @max_r - r_before
-      dc = @max_c - c_before
-      @r = r_before
-      @c = c_before
-      @max_r = max_r_before
-      @max_c = max_c_before
-      @mode = mode_before
-      shift! dr, dc
+      restore_state state
     end
 
     def bar
-      r_before, c_before = @r, @c
-      max_r_before, max_c_before = @max_r, @max_c
-      mode_before = @mode
-
-      @mode = :bar
-      @max_r = @r
-      @max_c = @c
-
+      state = switch_state :bar
       yield
     ensure
-      # only c should have been shifted after bar building
-      dr = @max_r - r_before
-      dc = @max_c - c_before
-      @r = r_before
-      @c = c_before
-      @max_r = max_r_before
-      @max_c = max_c_before
-      @mode = mode_before
-      shift! dr, dc
+      restore_state state
     end
 
     def shift!(dr, dc)
@@ -89,6 +59,28 @@ module BloXL
     end
 
     private
+
+    def switch_state mode
+      r_before, c_before = @r, @c
+      max_r_before, max_c_before = @max_r, @max_c
+      mode_before = @mode
+      @mode = mode
+      @max_r = @r
+      @max_c = @c
+      [r_before, c_before, max_r_before, max_c_before, mode_before]
+    end
+
+    def restore_state state
+      r_before, c_before, max_r_before, max_c_before, mode_before = *state
+      dr = @max_r - r_before
+      dc = @max_c - c_before
+      @r = r_before
+      @c = c_before
+      @max_r = max_r_before
+      @max_c = max_c_before
+      @mode = mode_before
+      shift! dr, dc
+    end
 
     def update_defaults
       set_defaults(0...@max_r, 0...@max_c)
