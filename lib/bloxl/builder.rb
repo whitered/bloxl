@@ -32,28 +32,54 @@ module BloXL
 
     def stack
       r_before, c_before = @r, @c
+      max_r_before, max_c_before = @max_r, @max_c
+      mode_before = @mode
+
       @mode = :stack
+      @max_r = @r
+      @max_c = @c
+
       yield
     ensure
       # only r should have been shifted after stack building
+      dr = @max_r - r_before
+      dc = @max_c - c_before
+      @r = r_before
       @c = c_before
-      @mode = nil
+      @max_r = max_r_before
+      @max_c = max_c_before
+      @mode = mode_before
+      shift! dr, dc
     end
 
     def bar
       r_before, c_before = @r, @c
+      max_r_before, max_c_before = @max_r, @max_c
+      mode_before = @mode
+
       @mode = :bar
+      @max_r = @r
+      @max_c = @c
+
       yield
     ensure
       # only c should have been shifted after bar building
+      dr = @max_r - r_before
+      dc = @max_c - c_before
       @r = r_before
-      @mode = nil
+      @c = c_before
+      @max_r = max_r_before
+      @max_c = max_c_before
+      @mode = mode_before
+      shift! dr, dc
     end
 
     def shift!(dr, dc)
       @max_r = [@max_r, @r + dr].max
       @max_c = [@max_c, @c + dc].max
-      update_defaults
+
+      # no need to update defaults inside a block - they will be updated after block end
+      update_defaults if @mode.nil?
       case @mode
       when nil, :stack
         @r += dr

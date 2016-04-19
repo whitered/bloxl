@@ -2,7 +2,7 @@
 module BloXL
   class Cell
     attr_reader :value, :options
-    
+
     def initialize(value, options = {})
       @value, @options = value, options
     end
@@ -13,6 +13,10 @@ module BloXL
 
     def render(internal_row)
       internal_row.add_cell @value
+    end
+
+    def inspect
+      @value.to_s
     end
   end
 end
