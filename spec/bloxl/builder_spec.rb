@@ -62,7 +62,24 @@ module BloXL
       it{should == [[c(1), c(2), c(5), c(6)], [c(3), c(4), c(7), c(8)]]}
     end
 
-    context 'nested stack', :focus => true do
+    context 'nested bar' do
+      before do
+        builder.stack do
+          builder.bar do
+            builder.cell 1
+            builder.cell 3
+          end
+
+          builder.bar do
+            builder.cell 2
+          end
+        end
+      end
+
+      it { should == [[c(1), c(3)], [c(2), c(nil)]] }
+    end
+
+    context 'nested stack' do
       before do
         builder.bar do
           builder.stack do
