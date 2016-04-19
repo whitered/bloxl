@@ -62,6 +62,22 @@ module BloXL
       it{should == [[c(1), c(2), c(5), c(6)], [c(3), c(4), c(7), c(8)]]}
     end
 
+    context 'nested stack', :focus => true do
+      before do
+        builder.bar do
+          builder.stack do
+            builder.cell 1
+          end
+
+          builder.stack do
+            builder.cell 2
+          end
+        end
+      end
+
+      it { should == [[c(1), c(2)]] }
+    end
+
     context 'filling the gaps' do
       before{
         builder.stack{
