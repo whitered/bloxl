@@ -66,10 +66,10 @@ module BloXL
       new_style = if options[:style] && options[:style].is_a?(Hash)
                        @sheet.stylesheet.add_style(options[:style])
                      end
-      if @block_style && new_style
-        @block_style.merge(new_style)
+      if @block_style
+        @block_style + new_style
       else
-        new_style or @block_style
+        new_style
       end
     end
 

@@ -13,7 +13,7 @@ module BloXL
       @axlsx_style
     end
 
-    def merge another
+    def + another
       if another.nil?
         self
       else

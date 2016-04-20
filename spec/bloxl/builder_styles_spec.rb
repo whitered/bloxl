@@ -3,7 +3,7 @@ module BloXL
 
     let(:sheet) { Sheet.new }
     let(:builder) { Builder.new sheet }
-    let(:style) { double 'style' }
+    let(:style) { spy 'style' }
 
     it 'should create style from hash' do
       expect(sheet.stylesheet).to receive(:add_style).and_return(style)

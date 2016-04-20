@@ -17,15 +17,15 @@ module BloXL
     end
 
 
-    describe :merge do
+    describe :+ do
       it 'should merge styles' do
         another = Style.new(stylesheet,  { fg_color: 'red', sz: 11 })
-        merged = style.merge(another)
+        merged = style + another
         expect(merged.options).to eq({ bg_color: 'blue', fg_color: 'red', sz: 11 })
       end
 
       it 'should return self when another is nil' do
-        expect(style.merge(nil)).to be style
+        expect(style + nil).to be style
       end
     end
 
