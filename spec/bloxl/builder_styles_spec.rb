@@ -21,11 +21,27 @@ module BloXL
       end
 
       context 'simple element' do
-        it 'should combine styles'
+        it 'should combine styles' do
+          builder.stack({ style: { bg_color: 'red' } }) do
+            builder.cell 2, { style: { fg_color: 'blue' } }
+          end
+
+          style = sheet.cells.first.first.options[:style]
+          expect(style.options).to eq({ bg_color: 'red', fg_color: 'blue' })
+        end
       end
 
       context 'another block element' do
-        it 'should combine styles'
+        it 'should combine styles' do
+          builder.stack({ style: { sz: 11 } }) do
+            builder.bar({ style: { b: true } }) do
+              builder.cell 4, { style: { fg_color: 'white' } }
+            end
+          end
+
+          style = sheet.cells.first.first.options[:style]
+          expect(style.options).to eq({ sz: 11, b: true, fg_color: 'white' })
+        end
       end
 
       it 'should use parent style for empty cells'

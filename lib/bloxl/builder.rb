@@ -11,17 +11,7 @@ module BloXL
       data.is_a?(Array) && data.each{|r| r.is_a?(Array)} or
         fail ArgumentError, "Not a 2D array: #{data.inspect}"
 
-      if options[:style]
-        # puts "got options #{options[:style]}"
-        if options[:style].is_a?(Hash)
-          style = @sheet.stylesheet.add_style(options[:style])
-          options[:style] = style
-          # puts " --> converted to #{options[:style]}"
-        end
-      else
-        options[:style] = @block_style
-        # puts "Using block style #{@block_style}"
-      end
+      options[:style] = current_style(options)
 
       data.each_with_index do |row, dr|
         row.each_with_index do |val, dc|
@@ -73,15 +63,24 @@ module BloXL
 
     private
 
+    def current_style options = {}
+      new_style = if options[:style] && options[:style].is_a?(Hash)
+                       @sheet.stylesheet.add_style(options[:style])
+                     end
+      if @block_style && new_style
+        @block_style.merge(new_style)
+      else
+        new_style or @block_style
+      end
+    end
+
     def switch_state mode, options
       r_before, c_before = @r, @c
       max_r_before, max_c_before = @max_r, @max_c
       mode_before = @mode
       block_style_before = @block_style
 
-      @block_style = if options[:style] && options[:style].is_a?(Hash)
-                       @sheet.stylesheet.add_style(options[:style])
-                     end
+      @block_style = current_style(options)
       @mode = mode
       @max_r = @r
       @max_c = @c

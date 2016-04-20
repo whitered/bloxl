@@ -12,5 +12,13 @@ module BloXL
       @axlsx_style = @stylesheet.axlsx_styles.add_style(options) if @axlsx_style.nil?
       @axlsx_style
     end
+
+    def merge another
+      if another.nil?
+        self
+      else
+        Style.new @stylesheet, @options.merge(another.options)
+      end
+    end
   end
 end
