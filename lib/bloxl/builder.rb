@@ -4,11 +4,24 @@ module BloXL
       @sheet = sheet
       @r, @c = 0, 0
       @max_r, @max_c = 0, 0
+      @block_style = nil
     end
 
     def table(data, options = {})
       data.is_a?(Array) && data.each{|r| r.is_a?(Array)} or
         fail ArgumentError, "Not a 2D array: #{data.inspect}"
+
+      if options[:style]
+        # puts "got options #{options[:style]}"
+        if options[:style].is_a?(Hash)
+          style = @sheet.stylesheet.add_style(options[:style])
+          options[:style] = style
+          # puts " --> converted to #{options[:style]}"
+        end
+      else
+        options[:style] = @block_style
+        # puts "Using block style #{@block_style}"
+      end
 
       data.each_with_index do |row, dr|
         row.each_with_index do |val, dc|
@@ -30,15 +43,15 @@ module BloXL
       table [array].transpose, options
     end
 
-    def stack
-      state = switch_state :stack
+    def stack options = {}
+      state = switch_state :stack, options
       yield
     ensure
       restore_state state
     end
 
-    def bar
-      state = switch_state :bar
+    def bar options = {}
+      state = switch_state :bar, options
       yield
     ensure
       restore_state state
@@ -60,18 +73,23 @@ module BloXL
 
     private
 
-    def switch_state mode
+    def switch_state mode, options
       r_before, c_before = @r, @c
       max_r_before, max_c_before = @max_r, @max_c
       mode_before = @mode
+      block_style_before = @block_style
+
+      @block_style = if options[:style] && options[:style].is_a?(Hash)
+                       @sheet.stylesheet.add_style(options[:style])
+                     end
       @mode = mode
       @max_r = @r
       @max_c = @c
-      [r_before, c_before, max_r_before, max_c_before, mode_before]
+      [r_before, c_before, max_r_before, max_c_before, mode_before, block_style_before]
     end
 
     def restore_state state
-      r_before, c_before, max_r_before, max_c_before, mode_before = *state
+      r_before, c_before, max_r_before, max_c_before, mode_before, block_style_before = *state
       dr = @max_r - r_before
       dc = @max_c - c_before
       @r = r_before
@@ -79,6 +97,7 @@ module BloXL
       @max_r = max_r_before
       @max_c = max_c_before
       @mode = mode_before
+      @block_style = block_style_before
       shift! dr, dc
     end
 

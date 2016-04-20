@@ -12,15 +12,21 @@ module BloXL
         expect(book.sheets.count).to eq 1
         expect(book.sheets.first.cells).to eq [[c(1), c(2), c(3)]]
       end
+
+      it 'should have stylesheet' do
+        expect(book.stylesheet).not_to be_nil
+      end
     end
 
     describe :sheet do
+
       describe 'without block' do
         before{book.sheet}
         subject{book.sheets.last}
 
         it{should be_a Sheet}
         its(:cells){should be_empty}
+        its(:stylesheet) { should be book.stylesheet }
       end
 
       describe 'with block' do
@@ -38,7 +44,7 @@ module BloXL
 
     describe :save do
       let(:path){xlsx_path}
-      
+
       it 'saves with path, provided on init' do
         expect(File.exists?(path)).to eq false
         Book.new(path).save
@@ -73,7 +79,7 @@ module BloXL
     describe :close do
       let(:path){xlsx_path}
       let(:book){Book.new(path)}
-      
+
       it 'is not closed on creation' do
         expect(File.exists?(path)).to eq false
         expect(book).to be_open
@@ -96,7 +102,7 @@ module BloXL
 
     describe :open do
       let(:path){xlsx_path}
-      
+
       context 'without block' do
         subject!{Book.open(path)}
         it{should be_a Book}

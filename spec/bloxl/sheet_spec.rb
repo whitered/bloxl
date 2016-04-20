@@ -3,7 +3,11 @@ require 'bloxl/sheet'
 module BloXL
   describe Sheet do
     let(:sheet){Sheet.new}
-    
+
+    it 'should have stylesheet' do
+      expect(sheet.stylesheet).not_to be_nil
+    end
+
     describe :set_cell do
       it 'should expand cells array' do
         expect(sheet.cells).to eq []
@@ -38,7 +42,7 @@ module BloXL
 
     describe :render do
       let(:axlsx){Axlsx::Worksheet.make}
-      
+
       it 'should render cells according to setup' do
         sheet.set_cell(0, 0, 'test')
         sheet.set_cell(2, 3, 'foo')
@@ -49,6 +53,12 @@ module BloXL
           [nil, nil, nil, nil],
           [nil, nil, nil, 'foo']
         )
+      end
+
+      it 'should set axlsx styles to stylesheet' do
+        expect(sheet.stylesheet.axlsx_styles).to be_nil
+        sheet.render(axlsx)
+        expect(sheet.stylesheet.axlsx_styles).not_to be_nil
       end
     end
   end

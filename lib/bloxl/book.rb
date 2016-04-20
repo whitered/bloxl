@@ -1,10 +1,11 @@
 module BloXL
   class Book
-    attr_reader :sheets, :path
-    
+    attr_reader :sheets, :path, :stylesheet
+
     def initialize(path = nil, &block)
       @path = path
       @sheets = []
+      @stylesheet = Stylesheet.new
       yield self if block
     end
 
@@ -15,13 +16,13 @@ module BloXL
 
     def default_sheet
       @default_sheet ||= begin
-        @sheets << Sheet.new
+        @sheets << Sheet.new(@stylesheet)
         @sheets.last
       end
     end
 
     def sheet(&block)
-      @sheets << Sheet.new
+      @sheets << Sheet.new(@stylesheet)
       @sheets.last.build(&block)
     end
 
@@ -60,7 +61,7 @@ module BloXL
     def default_builder
       default_sheet.build
     end
-    
+
     #def initialize
       #@package = Axlsx::Package.new
       #@sheets = []
@@ -71,10 +72,10 @@ module BloXL
 
       #self
     #end
-    
+
     #def save(path)
       #render!
-      
+
       #@package.use_shared_strings = true
       #@package.serialize(path)
 

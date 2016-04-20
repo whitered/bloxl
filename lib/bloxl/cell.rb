@@ -12,7 +12,12 @@ module BloXL
     end
 
     def render(internal_row)
-      internal_row.add_cell @value
+      options = {}
+      if @options[:style] && @options[:style].is_a?(Style)
+        style = @options[:style]
+        options[:style] = style.axlsx_style
+      end
+      internal_row.add_cell @value, options
     end
 
     def inspect

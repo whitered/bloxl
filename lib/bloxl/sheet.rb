@@ -3,9 +3,10 @@ require_relative 'cell'
 
 module BloXL
   class Sheet
-    attr_reader :cells
+    attr_reader :cells, :stylesheet
 
-    def initialize(&block)
+    def initialize(stylesheet = nil, &block)
+      @stylesheet = stylesheet || Stylesheet.new
       @cells = []
     end
 
@@ -17,6 +18,8 @@ module BloXL
     end
 
     def render(internal)
+      @stylesheet.axlsx_styles = internal.workbook.styles
+
       expand_cells!
 
       @cells.each do |row|
