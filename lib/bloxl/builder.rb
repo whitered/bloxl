@@ -51,8 +51,7 @@ module BloXL
       @max_r = [@max_r, @r + dr].max
       @max_c = [@max_c, @c + dc].max
 
-      # no need to update defaults inside a block - they will be updated after block end
-      update_defaults if @mode.nil?
+      update_defaults
       case @mode
       when nil, :stack
         @r += dr
@@ -105,9 +104,11 @@ module BloXL
     end
 
     def set_defaults(rs, cs)
+      options = {}
+      options[:style] = current_style if current_style
       rs.each do |r|
         cs.each do |c|
-          @sheet.set_cell?(r, c, nil)
+          @sheet.set_cell?(r, c, nil, options)
         end
       end
     end

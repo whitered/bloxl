@@ -44,7 +44,17 @@ module BloXL
         end
       end
 
-      it 'should use parent style for empty cells'
+      it 'should use parent style for empty cells' do
+        builder.stack({ style: { bg_color: "black" } }) do
+          builder.row [1, 2]
+          builder.cell 3
+        end
+
+        style = sheet.cells[1][1].options[:style]
+        expect(style).not_to be_nil
+        expect(style.options).to eql({ bg_color: "black" })
+      end
+
     end
   end
 end

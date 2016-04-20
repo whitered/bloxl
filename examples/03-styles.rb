@@ -22,19 +22,19 @@ BloXL.open('examples/output/styles.xlsx') do |b|
 
   b.bar style: { bg_color: "FFCCFFFF" } do
     b.stack do
-      b.cell 'Semester 1', style: { bg_color: "FFFF0000", fg_color: "#FF000000", sz: 14,  border: {style: :thin, color: "FFFF0000"}}
+      b.cell 'Semester 1', style: { fg_color: "FF993333", sz: 24 }
       b.row
-      b.row ['', *CLASSES], style: { bg_color: "FF99CCFF", fg_color: "#FF336633", sz: 20 }
+      b.row [nil, *CLASSES], style: { bg_color: "FFFFFF99", sz: 20 }
       b.bar do
-        b.column STUDENTS
-        b.table MARKS1
+        b.column STUDENTS, style: { sz: 16 }
+        b.table MARKS1, style: { fg_color: "FF993300", b: true }
       end
     end
-    b.column
+    b.cell nil, { style: { bg_color: "FFFFFFFF" } }
     b.stack(style: { bg_color: "FFFFCCFF" }) do
-      b.cell 'Semester 2'
+      b.cell 'Semester 2', style: { fg_color: "FF993333", sz: 24 }
       b.row
-      b.row ['', *CLASSES]
+      b.row [nil, *CLASSES]
       b.bar do
         b.column STUDENTS, style: { bg_color: "FFCCCCCC" }
         b.table MARKS2
