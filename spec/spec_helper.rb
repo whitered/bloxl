@@ -15,7 +15,7 @@ RSpec::Matchers.define :be_sheet_of do |*expected_rows|
   end
 
   failure_message do |actual|
-    "expected that worksheet to contain #{expected_rows}, though #{@actual}" 
+    "expected that worksheet to contain #{expected_rows}, though #{@actual}"
   end
 end
 
@@ -45,7 +45,7 @@ def xlsx_path
 end
 
 RSpec.configure do |spec|
-  spec.before do
-    FileUtils.rm_rf "spec/tempfiles/*.xlsx"
+  spec.before(:suite) do
+    FileUtils.rm Dir.glob("spec/tempfiles/*.xlsx")
   end
 end
