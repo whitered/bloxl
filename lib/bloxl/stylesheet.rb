@@ -3,8 +3,9 @@ module BloXL
 
     attr_accessor :axlsx_styles
 
-    def initialize
+    def initialize &block
       @named_styles = {}
+      yield self if block_given?
     end
 
     def add_style *args

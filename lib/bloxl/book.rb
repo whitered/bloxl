@@ -2,10 +2,10 @@ module BloXL
   class Book
     attr_reader :sheets, :path, :stylesheet
 
-    def initialize(path = nil, &block)
+    def initialize(path = nil, options = {}, &block)
       @path = path
       @sheets = []
-      @stylesheet = Stylesheet.new
+      @stylesheet = options[:stylesheet] || Stylesheet.new
       yield self if block
     end
 
@@ -49,8 +49,8 @@ module BloXL
     end
 
     class << self
-      def open(path = nil, &block)
-        new(path, &block).tap{|book|
+      def open(path = nil, options = {}, &block)
+        new(path, options, &block).tap{|book|
           book.close if block
         }
       end

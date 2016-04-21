@@ -4,38 +4,38 @@ module BloXL
     let(:path) { xlsx_path }
 
     before do
-      MARKS1 = [
+      marks1 = [
         %w[A  F],
         %w[B+ C-]
       ]
 
-      MARKS2 = [
+      marks2 = [
         %w[D+ B-],
         %w[B+ A]
       ]
 
-      STUDENTS = ['Bob', 'Ann']
-      CLASSES = ['Math', 'Physics']
+      students = ['Bob', 'Ann']
+      classes = ['Math', 'Physics']
 
       BloXL.open(path) do |b|
         b.bar do
           b.stack do
             b.cell 'Semester 1'
             b.row
-            b.row [nil, *CLASSES]
+            b.row [nil, *classes]
             b.bar do
-              b.column STUDENTS
-              b.table MARKS1
+              b.column students
+              b.table marks1
             end
           end
           b.column
           b.stack do
             b.cell 'Semester 2'
             b.row
-            b.row [nil, *CLASSES]
+            b.row [nil, *classes]
             b.bar do
-              b.column STUDENTS
-              b.table MARKS2
+              b.column students
+              b.table marks2
             end
           end
         end
