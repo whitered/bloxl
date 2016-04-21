@@ -58,11 +58,29 @@ module BloXL
     end
 
     it 'should accept named styles' do
-        sheet.stylesheet.style 'big', sz: 40
-        builder.cell 4, style: 'big'
-        style = sheet.cells[0][0].options[:style]
-        expect(style).not_to be_nil
-        expect(style.options).to eq(sz: 40)
+      sheet.stylesheet.style 'big', sz: 40
+      builder.cell 4, style: 'big'
+      style = sheet.cells[0][0].options[:style]
+      expect(style).not_to be_nil
+      expect(style.options).to eq(sz: 40)
+    end
+
+    it 'should accept style instance' do
+      s = sheet.stylesheet.style sz: 40
+      builder.cell 4, style: s
+      style = sheet.cells[0][0].options[:style]
+      expect(style).not_to be_nil
+      expect(style.options).to eq(sz: 40)
+    end
+
+
+    it 'should combine style instances' do
+      big = sheet.stylesheet.style sz: 40
+      red = sheet.stylesheet.style fg_color: "FFFF0000"
+      builder.cell 4, style: big + red
+      style = sheet.cells[0][0].options[:style]
+      expect(style).not_to be_nil
+      expect(style.options).to eq(sz: 40, fg_color: "FFFF0000")
     end
   end
 end
