@@ -1,11 +1,12 @@
 module BloXL
   class Style
 
-    attr_reader :options
+    attr_reader :options, :name
 
     def initialize stylesheet, options = {}
       @stylesheet = stylesheet
       @options = options
+      @name = @options.delete(:name)
     end
 
     def axlsx_style

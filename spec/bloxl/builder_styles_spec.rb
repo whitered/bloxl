@@ -56,5 +56,13 @@ module BloXL
       end
 
     end
+
+    it 'should accept named styles' do
+        sheet.stylesheet.add_style 'big', sz: 40
+        builder.cell 4, style: 'big'
+        style = sheet.cells[0][0].options[:style]
+        expect(style).not_to be_nil
+        expect(style.options).to eq(sz: 40)
+    end
   end
 end
