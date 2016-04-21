@@ -8,37 +8,35 @@ MARKS1 = [
   %w[A- A  B+]
 ]
 
-MARKS2 = [
-  %w[D+ B- A ],
-  %w[B+ A  C+],
-  %w[A- B  A-]
-]
-
 STUDENTS = ['Bob', 'Ann', 'Kate']
-CLASSES = ['Math', 'Phisics', 'Art']
+CLASSES = ['Math', 'Physics', 'Art']
+
+stylesheet = BloXL::Stylesheet.new do |ss|
+  ss.style 'h1',
+    sz: 30,
+    b: true
+
+  ss.style 'h2',
+    sz: 24,
+    b: true,
+    i: true
+end
+
+red = stylesheet.style fg_color: "FFFF6666"
+bold = stylesheet.style b: true
+bottom_border = stylesheet.style border: { style: :thin, color: "FF333366", edges: [:bottom] }
+border = stylesheet.style border: { style: :thin, color: "FF66CC66", edges: [:left, :right] }
 
 
-BloXL.open('examples/output/styles.xlsx') do |b|
+BloXL.open('examples/output/styles.xlsx', stylesheet: stylesheet) do |b|
 
-  b.bar style: { bg_color: "FFCCFFFF" } do
-    b.stack do
-      b.cell 'Semester 1', style: { fg_color: "FF993333", sz: 24 }
-      b.row
-      b.row [nil, *CLASSES], style: { bg_color: "FFFFFF99", sz: 20 }
-      b.bar do
-        b.column STUDENTS, style: { sz: 16 }
-        b.table MARKS1, style: { fg_color: "FF993300", b: true }
-      end
-    end
-    b.cell nil, { style: { bg_color: "FFFFFFFF" } }
-    b.stack(style: { bg_color: "FFFFCCFF" }) do
-      b.cell 'Semester 2', style: { fg_color: "FF993333", sz: 24 }
-      b.row
-      b.row [nil, *CLASSES]
-      b.bar do
-        b.column STUDENTS, style: { bg_color: "FFCCCCCC" }
-        b.table MARKS2
-      end
+  b.stack style: { bg_color: "FFEEEEFF" } do
+    b.cell 'Semester 1', style: 'h1'
+    b.row
+    b.row [nil, *CLASSES], style: 'h2'
+    b.bar style: { sz: 18, bg_color: "FFDDDDFF" } do
+      b.column STUDENTS, style: bottom_border
+      b.table MARKS1, style: red + bold + border
     end
   end
 end
