@@ -6,14 +6,14 @@ module BloXL
     let(:style) { spy 'style' }
 
     it 'should create style from hash' do
-      expect(sheet.stylesheet).to receive(:add_style).and_return(style)
+      expect(sheet.stylesheet).to receive(:style).and_return(style)
       expect(sheet).to receive(:set_cell).with(any_args, { style: style })
       builder.cell 1, { style: { sz: 21 } }
     end
 
     context 'inside block element' do
       it 'should use parent style' do
-        expect(sheet.stylesheet).to receive(:add_style).and_return(style)
+        expect(sheet.stylesheet).to receive(:style).and_return(style)
         expect(sheet).to receive(:set_cell).with(any_args, { style: style })
         builder.stack({ style: { bg_color: 'red' } }) do
           builder.cell 2
@@ -58,7 +58,7 @@ module BloXL
     end
 
     it 'should accept named styles' do
-        sheet.stylesheet.add_style 'big', sz: 40
+        sheet.stylesheet.style 'big', sz: 40
         builder.cell 4, style: 'big'
         style = sheet.cells[0][0].options[:style]
         expect(style).not_to be_nil

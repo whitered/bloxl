@@ -8,7 +8,7 @@ module BloXL
     before do
 
       stylesheet = Stylesheet.new do |ss|
-        ss.add_style 'italic', i: true
+        ss.style 'italic', i: true
       end
 
       BloXL.open(path, stylesheet: stylesheet) do |b|

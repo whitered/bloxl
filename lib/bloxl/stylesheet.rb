@@ -8,7 +8,7 @@ module BloXL
       yield self if block_given?
     end
 
-    def add_style *args
+    def style *args
       options = args.last || {}
       options[:name] = args.first if args.size > 1
       style = Style.new(self, options)

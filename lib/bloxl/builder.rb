@@ -66,7 +66,7 @@ module BloXL
       param = options[:style]
       new_style = if param
                     if param.is_a?(Hash)
-                      @sheet.stylesheet.add_style(param)
+                      @sheet.stylesheet.style(param)
                     else
                       @sheet.stylesheet.find param
                     end
