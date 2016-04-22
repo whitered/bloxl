@@ -18,14 +18,21 @@ module BloXL
 
 
     describe :+ do
+
+      let(:another) { Style.new(stylesheet,  { fg_color: 'red', sz: 11 }) }
+
       it 'should merge styles' do
-        another = Style.new(stylesheet,  { fg_color: 'red', sz: 11 })
         merged = style + another
         expect(merged.options).to eq({ bg_color: 'blue', fg_color: 'red', sz: 11 })
       end
 
       it 'should return self when another is nil' do
         expect(style + nil).to be style
+      end
+
+      it 'should not create duplicate instances' do
+        sum = style + another
+        expect(style + another).to be sum
       end
     end
 

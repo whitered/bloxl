@@ -7,6 +7,7 @@ module BloXL
       @stylesheet = stylesheet
       @options = options
       @name = @options.delete(:name)
+      @merged = {}
     end
 
     def axlsx_style
@@ -18,7 +19,7 @@ module BloXL
       if another.nil?
         self
       else
-        Style.new @stylesheet, @options.merge(another.options)
+        @merged[another] ||= Style.new(@stylesheet, @options.merge(another.options))
       end
     end
   end
