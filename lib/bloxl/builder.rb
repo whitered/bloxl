@@ -11,14 +11,15 @@ module BloXL
       data.is_a?(Array) && data.each{|r| r.is_a?(Array)} or
         fail ArgumentError, "Not a 2D array: #{data.inspect}"
 
-      options[:style] = current_style(options)
+      style = current_style(options.delete :style)
 
       data.each_with_index do |row, dr|
         row.each_with_index do |val, dc|
           @sheet.set_cell(@r + dr, @c + dc, val, options)
         end
       end
-      shift!(data.count, data.map(&:count).max)
+
+      close_block(@r, @c, data.count, data.map(&:count).max, style)
     end
 
     def cell(value = nil, options = {})
@@ -47,37 +48,24 @@ module BloXL
       restore_state state
     end
 
-    def shift!(dr, dc)
-      @max_r = [@max_r, @r + dr].max
-      @max_c = [@max_c, @c + dc].max
-
-      update_defaults
-      case @mode
-      when nil, :stack
-        @r += dr
-      when :bar
-        @c += dc
-      end
-    end
-
     private
 
-    def current_style options = {}
-      param = options[:style]
-      new_style = if param
-                    if param.is_a?(Hash)
-                      @sheet.stylesheet.style(param)
-                    elsif param.is_a?(Style)
-                      param
-                    else
-                      @sheet.stylesheet.find param
-                    end
-                  end
-      if @block_style
-        @block_style + new_style
-      else
-        new_style
+    def current_style val
+      # new_style =
+      if val
+        if val.is_a?(Hash)
+          @sheet.stylesheet.style(val)
+        elsif val.is_a?(Style)
+          val
+        else
+          @sheet.stylesheet.find val
+        end
       end
+      # if @block_style
+      #   @block_style + new_style
+      # else
+      #   new_style
+      # end
     end
 
     def switch_state mode, options
@@ -86,7 +74,7 @@ module BloXL
       mode_before = @mode
       block_style_before = @block_style
 
-      @block_style = current_style(options)
+      @block_style = current_style(options.delete :style)
       @mode = mode
       @max_r = @r
       @max_c = @c
@@ -102,22 +90,46 @@ module BloXL
       @max_r = max_r_before
       @max_c = max_c_before
       @mode = mode_before
+      close_block r_before, c_before, dr, dc, @block_style
       @block_style = block_style_before
-      shift! dr, dc
     end
 
-    def update_defaults
-      set_defaults(0...@max_r, 0...@max_c)
+    def close_block(r, c, dr, dc, style)
+      @max_r = [@max_r, @r + dr].max
+      @max_c = [@max_c, @c + dc].max
+
+      apply_style r...r + dr, c...c + dc, style
+
+      # update_defaults
+      case @mode
+      when nil, :stack
+        @r += dr
+      when :bar
+        @c += dc
+      end
     end
 
-    def set_defaults(rs, cs)
-      options = {}
-      options[:style] = current_style if current_style
+
+    def apply_style(rs, cs, style)
       rs.each do |r|
         cs.each do |c|
-          @sheet.set_cell?(r, c, nil, options)
+          @sheet.add_cell_style(r, c, style)
         end
       end
     end
+
+    # def update_defaults
+    #   set_defaults(0...@max_r, 0...@max_c)
+    # end
+
+    # def set_defaults(rs, cs)
+    #   options = {}
+    #   options[:style] = current_style if current_style
+    #   rs.each do |r|
+    #     cs.each do |c|
+    #       @sheet.set_cell?(r, c, nil, options)
+    #     end
+    #   end
+    # end
   end
 end
