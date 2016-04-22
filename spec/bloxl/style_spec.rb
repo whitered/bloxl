@@ -7,6 +7,18 @@ module BloXL
     let(:options) { { bg_color: 'blue', fg_color: 'blue' } }
     let(:style) {  Style.new(stylesheet, options) }
 
+
+    it 'should keep options hash protected' do
+      border = { style: :thin }
+      options[:border] = border
+      s = style
+      options[:bg_color] = 'white'
+      options[:border][:style] = :thick
+      expect(s.options[:bg_color]).to eq('blue')
+      expect(s.options[:border][:style]).to eq(:thin)
+    end
+
+
     describe :axlsx_style do
       it 'should create axlsx_style' do
         axlsx_styles = double 'axlsx_styles'
@@ -40,7 +52,7 @@ module BloXL
 
     describe :has_block_border? do
 
-      let(:options) { { border: { style: :thin, color: "FFFFFFFF", edges: [:all], } } }
+      let(:options) { { border: { style: :thin, color: "FFFFFFFF", edges: [:all] } } }
 
 
       it 'should be true when style has block border' do

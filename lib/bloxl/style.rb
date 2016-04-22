@@ -5,7 +5,7 @@ module BloXL
 
     def initialize stylesheet, options = {}
       @stylesheet = stylesheet
-      @options = options
+      @options = deep_copy options
       @name = @options.delete(:name)
       @merged = {}
     end
@@ -27,6 +27,13 @@ module BloXL
     def has_block_border?
       border_target = options[:border] && options[:border][:target]
       border_target == :block
+    end
+
+
+    private
+
+    def deep_copy options
+      Marshal.load(Marshal.dump(options))
     end
   end
 end
