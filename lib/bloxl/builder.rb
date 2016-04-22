@@ -51,7 +51,6 @@ module BloXL
     private
 
     def current_style val
-      # new_style =
       if val
         if val.is_a?(Hash)
           @sheet.stylesheet.style(val)
@@ -61,11 +60,6 @@ module BloXL
           @sheet.stylesheet.find val
         end
       end
-      # if @block_style
-      #   @block_style + new_style
-      # else
-      #   new_style
-      # end
     end
 
     def switch_state mode, options
@@ -100,7 +94,6 @@ module BloXL
 
       apply_style r...r + dr, c...c + dc, style
 
-      # update_defaults
       case @mode
       when nil, :stack
         @r += dr
@@ -118,18 +111,5 @@ module BloXL
       end
     end
 
-    # def update_defaults
-    #   set_defaults(0...@max_r, 0...@max_c)
-    # end
-
-    # def set_defaults(rs, cs)
-    #   options = {}
-    #   options[:style] = current_style if current_style
-    #   rs.each do |r|
-    #     cs.each do |c|
-    #       @sheet.set_cell?(r, c, nil, options)
-    #     end
-    #   end
-    # end
   end
 end

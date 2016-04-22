@@ -35,16 +35,10 @@ module BloXL
       @cells[r][c] = Cell.new(val, options)
     end
 
-    # def set_cell?(r, c, val, options = {})
-    #   @cells[r] ||= []
-    #   @cells[r][c] ||= Cell.new(val, options)
-    # end
-
     def add_cell_style(r, c, style)
       @cells[r] ||= []
       @cells[r][c] ||= Cell.new
       @cells[r][c].add_style style unless style.nil?
-      # puts "add cell style #{r}, #{c} #{style}"
     end
 
     private
@@ -54,7 +48,7 @@ module BloXL
       (0...@cells.count).each do |r|
         @cells[r] ||= []
         (0...max_c).each do |c|
-          @cells[r][c] ||= Cell.new(nil, {})
+          @cells[r][c] ||= Cell.new
         end
       end
     end
