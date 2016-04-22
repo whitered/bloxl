@@ -22,5 +22,11 @@ module BloXL
         @merged[another] ||= Style.new(@stylesheet, @options.merge(another.options))
       end
     end
+
+
+    def has_block_border?
+      border_target = options[:border] && options[:border][:target]
+      border_target == :block
+    end
   end
 end

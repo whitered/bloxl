@@ -4,7 +4,8 @@ module BloXL
   describe Style do
 
     let(:stylesheet) { Stylesheet.new }
-    let(:style) {  Style.new(stylesheet, { bg_color: 'blue', fg_color: 'blue' }) }
+    let(:options) { { bg_color: 'blue', fg_color: 'blue' } }
+    let(:style) {  Style.new(stylesheet, options) }
 
     describe :axlsx_style do
       it 'should create axlsx_style' do
@@ -33,6 +34,24 @@ module BloXL
       it 'should not create duplicate instances' do
         sum = style + another
         expect(style + another).to be sum
+      end
+    end
+
+
+    describe :has_block_border? do
+
+      let(:options) { { border: { style: :thin, color: "FFFFFFFF", edges: [:all], } } }
+
+
+      it 'should be true when style has block border' do
+        options[:border][:target] = :block
+        expect(style).to have_block_border
+      end
+
+      it 'should be false when style has no block border' do
+        options[:border][:target] = :cell
+        expect(style).not_to have_block_border
+        expect(Style.new(stylesheet)).not_to have_block_border
       end
     end
 

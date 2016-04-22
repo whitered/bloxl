@@ -25,7 +25,7 @@ end
 red = stylesheet.style fg_color: "FFFF6666"
 bold = stylesheet.style b: true
 bottom_border = stylesheet.style border: { style: :thin, color: "FF333366", edges: [:bottom] }
-border = stylesheet.style border: { style: :thin, color: "FF66CC66", edges: [:left, :right] }
+border = stylesheet.style border: { style: :thin, color: "FF66CC66", edges: [:left, :right, :top, :bottom], target: :block }
 
 
 BloXL.open('examples/output/styles.xlsx', stylesheet: stylesheet) do |b|
