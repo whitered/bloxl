@@ -1,5 +1,5 @@
 module BloXL
-  describe 'styling', focus: true do
+  describe 'styling' do
 
     let(:path) { xlsx_path }
 

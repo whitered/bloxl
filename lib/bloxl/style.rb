@@ -8,6 +8,7 @@ module BloXL
       @options = deep_copy options
       @name = @options.delete(:name)
       @merged = {}
+      @filtered = {}
     end
 
     def axlsx_style
@@ -30,10 +31,33 @@ module BloXL
     end
 
 
+    def filter_border_edges allowed_edges
+      return @filtered[allowed_edges] unless @filtered[allowed_edges].nil?
+      border = @options[:border]
+      edges = parse_edges(border[:edges]) & allowed_edges if border && border[:edges].is_a?(Array)
+      if edges && !(border[:edges] - edges).empty?
+        border[:edges] = edges
+        @filtered[allowed_edges] = Style.new(@stylesheet, @options)
+      else
+        self
+      end
+    end
+
+
     private
 
     def deep_copy options
       Marshal.load(Marshal.dump(options))
+    end
+
+
+    def parse_edges edges
+      all = [:top, :right, :bottom, :left]
+      if edges.include?(:all)
+        all
+      else
+        edges & all
+      end
     end
   end
 end

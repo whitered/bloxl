@@ -67,5 +67,43 @@ module BloXL
       end
     end
 
+
+    describe :filter_border_edges do
+
+      let(:options) { { border: { style: :thin, color: "FFFFFFFF", edges: [:top, :bottom, :left] } } }
+      let(:filter_edges) { [:top, :right] }
+
+      subject { style.filter_border_edges(filter_edges) }
+
+      it 'should not create new style when no filtering required' do
+        options[:border][:edges] = [:top, :right]
+        expect(subject).to be style
+      end
+
+      it 'should not create new style when there is no border' do
+        options[:border] = nil
+        expect(subject).to be style
+      end
+
+      it 'should filter edges' do
+        expect(subject.options[:border][:edges]).to eq [:top]
+      end
+
+      it 'should remove :target from style options' do
+        expect(subject.options[:border]).not_to have_key(:target)
+      end
+
+      it 'should properly handle :all edges value' do
+        options[:border][:edges] = [:all]
+        expect(subject.options[:border][:edges]).to eq [:top, :right]
+      end
+
+      it 'should not duplicate styles' do
+        s = style.filter_border_edges(filter_edges)
+        expect(subject).to be s
+      end
+
+    end
+
   end
 end
