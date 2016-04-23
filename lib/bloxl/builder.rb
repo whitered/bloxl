@@ -104,9 +104,22 @@ module BloXL
 
 
     def apply_style(rs, cs, style)
-      rs.each do |r|
-        cs.each do |c|
-          @sheet.add_cell_style(r, c, style)
+      if style && style.has_block_border?
+        rs.each do |r|
+          cs.each do |c|
+            allowed = []
+            allowed << :top if r == rs.begin
+            allowed << :right if c == cs.end - 1
+            allowed << :bottom if r == rs.end - 1
+            allowed << :left if c == cs.begin
+            @sheet.add_cell_style(r, c, style.filter_border_edges(allowed))
+          end
+        end
+      else
+        rs.each do |r|
+          cs.each do |c|
+            @sheet.add_cell_style(r, c, style)
+          end
         end
       end
     end

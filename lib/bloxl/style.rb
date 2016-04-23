@@ -36,8 +36,9 @@ module BloXL
       border = @options[:border]
       edges = parse_edges(border[:edges]) & allowed_edges if border && border[:edges].is_a?(Array)
       if edges && !(border[:edges] - edges).empty?
-        border[:edges] = edges
-        @filtered[allowed_edges] = Style.new(@stylesheet, @options)
+        opts = deep_copy @options
+        opts[:border][:edges] = edges
+        @filtered[allowed_edges] = Style.new(@stylesheet, opts)
       else
         self
       end

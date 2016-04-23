@@ -103,6 +103,12 @@ module BloXL
         expect(subject).to be s
       end
 
+      it 'should not modify source style' do
+        source_options = Marshal.load(Marshal.dump style.options)
+        subject
+        expect(style.options).to eq(source_options)
+      end
+
     end
 
   end
