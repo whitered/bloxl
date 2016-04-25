@@ -4,7 +4,7 @@ module BloXL
     attr_reader :name, :elements
 
 
-    def initialize stylesheet, elements = nil, options = {}
+    def initialize stylesheet, elements = nil, options = {}, &block
       @stylesheet = stylesheet
       @name = options.delete(:name)
       @elements = elements || []
@@ -13,12 +13,14 @@ module BloXL
       else
         element(options)
       end
+
+      yield if block_given?
     end
 
 
     def options_for value = nil
       @elements.inject({}) do |opts, elm|
-        opts.merge(elm.options) if elm.applicable?(value)
+        if elm.applicable?(value) then opts.merge(elm.options) else opts end
       end
     end
 
@@ -59,6 +61,7 @@ module BloXL
       @elements << StyleElement.new(options, block)
     end
 
+    alias conditional element
 
     private
 

@@ -7,8 +7,13 @@ module BloXL
 
     before do
 
-      stylesheet = Stylesheet.new do |ss|
-        ss.style 'italic', i: true
+      stylesheet = Stylesheet.new do
+        style 'italic', i: true
+        style 'conditional', nil do
+          conditional(b: true) { |v| v == 'b' }
+          conditional(i: true) { |v| v == 'i' }
+          conditional(u: true) { |v| v == 'u' }
+        end
       end
 
       bold = stylesheet.style b: true
@@ -23,6 +28,7 @@ module BloXL
         end
         b.cell "style instance", style: bold
         b.cell "style composition", style: bold + underline
+        b.row %w(a b i u), style: 'conditional'
       end
 
     end
@@ -55,6 +61,13 @@ module BloXL
 
     it 'should handle style composition' do
       expect(subject.font(6, 1)).to be_bold.and be_underline
+    end
+
+    it 'should handle conditional styles' do
+      expect(subject.font(7, 1)).not_to be_bold
+      expect(subject.font(7, 2)).to be_bold
+      expect(subject.font(7, 3)).to be_italic
+      expect(subject.font(7, 4)).to be_underline
     end
 
   end
