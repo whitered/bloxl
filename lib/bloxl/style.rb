@@ -1,64 +1,71 @@
 module BloXL
   class Style
 
-    attr_reader :options, :name
+    attr_reader :name, :elements
 
-    def initialize stylesheet, options = {}
+
+    def initialize stylesheet, elements = nil, options = {}
       @stylesheet = stylesheet
-      @options = deep_copy options
-      @name = @options.delete(:name)
-      @merged = {}
-      @filtered = {}
+      @name = options.delete(:name)
+      @elements = elements || []
+      if options.empty?
+        reset
+      else
+        element(options)
+      end
     end
 
-    def axlsx_style
-      @axlsx_style = @stylesheet.axlsx_styles.add_style(options) if @axlsx_style.nil?
-      @axlsx_style
+
+    def options_for value = nil
+      @elements.inject({}) do |opts, elm|
+        opts.merge(elm.options) if elm.applicable?(value)
+      end
     end
+
+
+    def axlsx_style value
+      elements_matched = @elements.map { |elm| elm.applicable?(value) }
+      @cached_axlsx_styles[elements_matched] ||= @stylesheet.axlsx_styles.add_style(options_for(value))
+    end
+
 
     def + another
       if another.nil?
         self
       else
-        @merged[another] ||= Style.new(@stylesheet, @options.merge(another.options))
+        @cached_styles[another] ||= Style.new(@stylesheet, @elements + another.elements)
       end
     end
 
 
     def has_block_border?
-      border_target = options[:border] && options[:border][:target]
-      border_target == :block
+      @elements.any? { |elm| elm.has_block_border? }
     end
 
 
     def filter_border_edges allowed_edges
-      return @filtered[allowed_edges] unless @filtered[allowed_edges].nil?
-      border = @options[:border]
-      edges = parse_edges(border[:edges]) & allowed_edges if border && border[:edges].is_a?(Array)
-      if edges && !(border[:edges] - edges).empty?
-        opts = deep_copy @options
-        opts[:border][:edges] = edges
-        @filtered[allowed_edges] = Style.new(@stylesheet, opts)
-      else
+      return @cached_styles[allowed_edges] unless @cached_styles[allowed_edges].nil?
+      filtered_elements = @elements.map { |elm| elm.filter_border_edges(allowed_edges) }
+      if filtered_elements == @elements
         self
+      else
+        @cached_styles[allowed_edges] ||= Style.new(@stylesheet, filtered_elements)
       end
+    end
+
+
+    def element options = {}, &block
+      reset
+      @elements << StyleElement.new(options, block)
     end
 
 
     private
 
-    def deep_copy options
-      Marshal.load(Marshal.dump(options))
+    def reset
+      @cached_styles = {}
+      @cached_axlsx_styles = {}
     end
 
-
-    def parse_edges edges
-      all = [:top, :right, :bottom, :left]
-      if edges.include?(:all)
-        all
-      else
-        edges & all
-      end
-    end
   end
 end

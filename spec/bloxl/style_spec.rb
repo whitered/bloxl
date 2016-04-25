@@ -5,7 +5,7 @@ module BloXL
 
     let(:stylesheet) { Stylesheet.new }
     let(:options) { { bg_color: 'blue', fg_color: 'blue' } }
-    let(:style) {  Style.new(stylesheet, options) }
+    let(:style) {  Style.new(stylesheet, nil, options) }
 
 
     it 'should keep options hash protected' do
@@ -14,8 +14,8 @@ module BloXL
       s = style
       options[:bg_color] = 'white'
       options[:border][:style] = :thick
-      expect(s.options[:bg_color]).to eq('blue')
-      expect(s.options[:border][:style]).to eq(:thin)
+      expect(s.options_for[:bg_color]).to eq('blue')
+      expect(s.options_for[:border][:style]).to eq(:thin)
     end
 
 
@@ -25,18 +25,18 @@ module BloXL
         axlsx_style = double('axlsx_style')
         expect(axlsx_styles).to receive(:add_style).and_return(axlsx_style)
         stylesheet.axlsx_styles = axlsx_styles;
-        expect(style.axlsx_style).to be axlsx_style
+        expect(style.axlsx_style(2)).to be axlsx_style
       end
     end
 
 
     describe :+ do
 
-      let(:another) { Style.new(stylesheet,  { fg_color: 'red', sz: 11 }) }
+      let(:another) { Style.new(stylesheet, nil, { fg_color: 'red', sz: 11 }) }
 
       it 'should merge styles' do
         merged = style + another
-        expect(merged.options).to eq({ bg_color: 'blue', fg_color: 'red', sz: 11 })
+        expect(merged.options_for).to eq({ bg_color: 'blue', fg_color: 'red', sz: 11 })
       end
 
       it 'should return self when another is nil' do
@@ -86,16 +86,16 @@ module BloXL
       end
 
       it 'should filter edges' do
-        expect(subject.options[:border][:edges]).to eq [:top]
+        expect(subject.options_for[:border][:edges]).to eq [:top]
       end
 
       it 'should remove :target from style options' do
-        expect(subject.options[:border]).not_to have_key(:target)
+        expect(subject.options_for[:border]).not_to have_key(:target)
       end
 
       it 'should properly handle :all edges value' do
         options[:border][:edges] = [:all]
-        expect(subject.options[:border][:edges]).to eq [:top, :right]
+        expect(subject.options_for[:border][:edges]).to eq [:top, :right]
       end
 
       it 'should not duplicate styles' do
@@ -104,9 +104,9 @@ module BloXL
       end
 
       it 'should not modify source style' do
-        source_options = Marshal.load(Marshal.dump style.options)
+        source_options = Marshal.load(Marshal.dump style.options_for)
         subject
-        expect(style.options).to eq(source_options)
+        expect(style.options_for).to eq(source_options)
       end
 
     end

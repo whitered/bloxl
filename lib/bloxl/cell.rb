@@ -14,20 +14,20 @@ module BloXL
 
     def render(internal_row)
       options = {}
-      options[:style] = style.axlsx_style unless style.nil?
+      options[:style] = style.axlsx_style(@value) unless style.nil?
       internal_row.add_cell @value, options
     end
 
     def add_style style
-      @style = nil
+      @cached_style = nil
       @styles << style unless style.nil?
     end
 
     def style
-      if @style.nil? && !@styles.empty?
-        @style = @styles.reverse.inject(:+)
+      if @cached_style.nil? && !@styles.empty?
+        @cached_style = @styles.reverse.inject(:+)
       end
-      @style
+      @cached_style
     end
 
     def inspect

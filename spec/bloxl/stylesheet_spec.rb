@@ -21,7 +21,7 @@ module BloXL
       it 'should find named style' do
         stylesheet.style 'red', fg_color: "FFFF0000"
         style = stylesheet.find 'red'
-        expect(style.options).to eq(fg_color: "FFFF0000")
+        expect(style.options_for).to eq(fg_color: "FFFF0000")
       end
     end
   end

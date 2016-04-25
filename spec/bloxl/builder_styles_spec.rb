@@ -4,7 +4,7 @@ module BloXL
     let(:sheet) { Sheet.new }
     let(:builder) { Builder.new sheet }
 
-    subject { sheet.cells[0][0].style.options }
+    subject { sheet.cells[0][0].style.options_for }
 
 
     it 'should create style from hash' do
@@ -49,7 +49,7 @@ module BloXL
         end
 
         style = sheet.cells[1][1].style
-        expect(style.options).to eql({ bg_color: "black" })
+        expect(style.options_for).to eql({ bg_color: "black" })
       end
 
     end
