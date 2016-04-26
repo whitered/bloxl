@@ -22,9 +22,9 @@ module BloXL
 
 
     def filter_border_edges allowed_edges
-      border = @options[:border]
-      edges = parse_edges(border[:edges]) & allowed_edges if border && border[:edges].is_a?(Array)
-      if edges && !(border[:edges] - edges).empty?
+      border_edges = @options[:border][:edges] if @options[:border]
+      edges = parse_edges(border_edges) & allowed_edges if border_edges.is_a?(Array)
+      if edges && !(border_edges - edges).empty?
         opts = deep_copy @options
         opts[:border][:edges] = edges
         StyleElement.new opts, @block

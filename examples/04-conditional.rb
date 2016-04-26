@@ -13,13 +13,13 @@ ROWS = ['Average high °C', 'Daily mean °C', 'Average low °C']
 stylesheet = BloXL::Stylesheet.new do
   style 'bold', b: true
 end
-temp = stylesheet.style  do
-    conditional({ bg_color: "FFFFB000" }) { |v| 32 <= v.to_f }
-    conditional({ bg_color: "FFFFFF80" }) { |v| (28...32).include? v.to_f }
-    conditional({ bg_color: "FF80FF80" }) { |v| (25...28).include? v.to_f }
-    conditional({ bg_color: "FF80FFFF" }) { |v| (22...25).include? v.to_f }
-    conditional({ bg_color: "FF00A0FF" }) { |v| 22 > v.to_f }
-  end
+temp = stylesheet.style do
+  conditional({ bg_color: "FFFFB000" }) { |v| 32 <= v.to_f }
+  conditional({ bg_color: "FFFFFF80" }) { |v| (28...32).include? v.to_f }
+  conditional({ bg_color: "FF80FF80" }) { |v| (25...28).include? v.to_f }
+  conditional({ bg_color: "FF80FFFF" }) { |v| (22...25).include? v.to_f }
+  conditional({ bg_color: "FF00A0FF" }) { |v| 22 > v.to_f }
+end
 
 border_bottom = stylesheet.style border: { edges: [:right, :bottom, :left], target: :block, color: "FF9900", style: :thin }
 border_top = stylesheet.style border: {edges: [:left, :top, :right], target: :block, color: "FF9900", style: :thin }
