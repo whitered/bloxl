@@ -2,11 +2,14 @@ require 'bloxl/sheet'
 
 module BloXL
   describe Sheet do
-    let(:sheet){Sheet.new}
+
+    let(:sheet) { Sheet.new }
+
 
     it 'should have stylesheet' do
       expect(sheet.stylesheet).not_to be_nil
     end
+
 
     describe :set_cell do
       it 'should expand cells array' do
@@ -15,11 +18,12 @@ module BloXL
         expect(sheet.cells.size).to eq 1
         expect(sheet.cells.first.size).to eq 1
 
-        sheet.set_cell(5, 10, 'foo')
+        sheet.set_cell(10, 5, 'foo')
         expect(sheet.cells.size).to eq 6
         expect(sheet.cells[5].size).to eq 11
       end
     end
+
 
     describe :build do
       it 'works without block' do
@@ -37,15 +41,14 @@ module BloXL
       end
     end
 
-    describe :prepare do
-    end
 
     describe :render do
-      let(:axlsx){Axlsx::Worksheet.make}
+
+      let(:axlsx) { Axlsx::Worksheet.make }
 
       it 'should render cells according to setup' do
         sheet.set_cell(0, 0, 'test')
-        sheet.set_cell(2, 3, 'foo')
+        sheet.set_cell(3, 2, 'foo')
         sheet.render(axlsx)
 
         expect(axlsx).to be_sheet_of(

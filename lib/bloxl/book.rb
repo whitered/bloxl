@@ -30,7 +30,7 @@ module BloXL
       open? or fail(RuntimeError, 'Book is already closed')
       path ||= @path or fail(ArgumentError, 'Save path is not set')
       package = Axlsx::Package.new
-      @sheets.each{|sheet| sheet.render(package.workbook.add_worksheet)}
+      @sheets.each { |sheet| sheet.render(package.workbook.add_worksheet) }
 
       package.serialize(path)
     end

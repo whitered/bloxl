@@ -3,39 +3,44 @@ require_relative 'cell'
 
 module BloXL
   class Sheet
+
     attr_reader :cells, :stylesheet
+
 
     def initialize(stylesheet = nil, &block)
       @stylesheet = stylesheet || Stylesheet.new
       @cells = []
     end
 
+
     def build
       @builder ||= Builder.new(self)
-      @builder.tap{|b|
+      @builder.tap do |b|
         yield b if block_given?
-      }
+      end
     end
 
-    def render(internal)
-      @stylesheet.axlsx_styles = internal.workbook.styles
 
+    def render(axlsx_worksheet)
+      @stylesheet.axlsx_styles = axlsx_worksheet.workbook.styles
       expand_cells!
 
       @cells.each do |row|
-        internal_row = internal.add_row
+        axlsx_row = axlsx_worksheet.add_row
         row.each do |cell|
-          cell.render(internal_row)
+          cell.render(axlsx_row)
         end
       end
     end
 
-    def set_cell(r, c, val, options = {})
+
+    def set_cell(c, r, val, options = {})
       @cells[r] ||= []
       @cells[r][c] = Cell.new(val, options)
     end
 
-    def add_cell_style(r, c, style)
+
+    def add_cell_style(c, r, style)
       @cells[r] ||= []
       @cells[r][c] ||= Cell.new
       @cells[r][c].add_style style unless style.nil?
@@ -52,5 +57,6 @@ module BloXL
         end
       end
     end
+
   end
 end
