@@ -1,6 +1,10 @@
 require 'bloxl/builder'
 
 module BloXL
+  class Builder
+    attr_reader :cells
+  end
+
   describe Builder do
 
     let(:sheet) { Sheet.new }
@@ -61,6 +65,15 @@ module BloXL
         end
       end
       it { should == [[c(1), c(2), c(5), c(6)], [c(3), c(4), c(7), c(8)]] }
+    end
+
+
+    describe :chart do
+      before { builder.chart }
+      it 'should add chart to sheet' do
+        expect(sheet.charts.first).to be_instance_of Chart
+      end
+
     end
 
 

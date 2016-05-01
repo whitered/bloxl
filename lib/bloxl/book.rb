@@ -12,7 +12,7 @@ module BloXL
     extend Forwardable
 
     def_delegators :default_builder,
-      :cell, :row, :column, :table, :bar, :stack
+      :cell, :row, :column, :table, :bar, :stack, :chart
 
     def default_sheet
       @default_sheet ||= begin

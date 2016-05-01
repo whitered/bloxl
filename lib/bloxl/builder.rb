@@ -55,6 +55,16 @@ module BloXL
       restore_state state
     end
 
+
+    def chart(data = nil, options = {}, &block)
+      options[:start_at] ||= Axlsx::cell_r(@c, @r)
+      chart = Chart.new data, options, &block
+      @sheet.add_chart chart
+      w, h = chart.size
+      close_block @c, @r, w, h, nil
+    end
+
+
     private
 
     def current_style val

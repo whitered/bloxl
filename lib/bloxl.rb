@@ -1,8 +1,7 @@
 require 'axlsx'
 
 module BloXL
-  #%w[block table stack bar sheet book].each do |mod|
-  %w[builder sheet book stylesheet style style_element].each do |mod|
+  %w[builder sheet book stylesheet style style_element chart chart_labels].each do |mod|
     require_relative "bloxl/#{mod}"
   end
 

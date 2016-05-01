@@ -4,12 +4,13 @@ require_relative 'cell'
 module BloXL
   class Sheet
 
-    attr_reader :cells, :stylesheet
+    attr_reader :cells, :stylesheet, :charts
 
 
     def initialize(stylesheet = nil, &block)
       @stylesheet = stylesheet || Stylesheet.new
       @cells = []
+      @charts = []
     end
 
 
@@ -31,6 +32,10 @@ module BloXL
           cell.render(axlsx_row)
         end
       end
+
+      @charts.each do |chart|
+        chart.render(axlsx_worksheet)
+      end
     end
 
 
@@ -43,8 +48,14 @@ module BloXL
     def add_cell_style(c, r, style)
       @cells[r] ||= []
       @cells[r][c] ||= Cell.new
-      @cells[r][c].add_style style unless style.nil?
+      @cells[r][c].add_style style
     end
+
+
+    def add_chart chart
+      @charts << chart
+    end
+
 
     private
 

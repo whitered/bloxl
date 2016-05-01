@@ -25,6 +25,22 @@ module BloXL
     end
 
 
+    describe :add_cell_style do
+      it 'should add cell style' do
+        sheet.add_cell_style(1, 2, 'style')
+        expect(sheet.cells[2][1].style).to eq('style')
+      end
+    end
+
+
+    describe :add_chart do
+      it 'should add chart' do
+        sheet.add_chart 'chart'
+        expect(sheet.charts).to eq ['chart']
+      end
+    end
+
+
     describe :build do
       it 'works without block' do
         expect(sheet.build).to be_a Builder
@@ -52,9 +68,9 @@ module BloXL
         sheet.render(axlsx)
 
         expect(axlsx).to be_sheet_of(
-          ['test', nil, nil, nil],
-          [nil, nil, nil, nil],
-          [nil, nil, nil, 'foo']
+          ['test', '', '', ''],
+          ['', '', '', ''],
+          ['', '', '', 'foo']
         )
       end
 
@@ -62,6 +78,13 @@ module BloXL
         expect(sheet.stylesheet.axlsx_styles).to be_nil
         sheet.render(axlsx)
         expect(sheet.stylesheet.axlsx_styles).not_to be_nil
+      end
+
+      it 'should render charts' do
+        chart = double 'chart'
+        sheet.add_chart chart
+        expect(chart).to receive(:render)
+        sheet.render axlsx
       end
     end
   end

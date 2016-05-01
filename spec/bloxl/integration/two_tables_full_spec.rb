@@ -47,11 +47,11 @@ module BloXL
     }
 
     it { should == [
-      ['Semester 1', nil, nil,  nil, 'Semester 2', nil, nil],
-      [nil] * 7,
-      [nil, 'Math', 'Physics', nil, nil, 'Math', 'Physics'],
-      ['Bob', 'A', 'F', nil, 'Bob', 'D+', 'B-'],
-      ['Ann', 'B+', 'C-', nil, 'Ann', 'B+', 'A']
+      ['Semester 1', '', '',  '', 'Semester 2', '', ''],
+      [''] * 7,
+      ['', 'Math', 'Physics', '', '', 'Math', 'Physics'],
+      ['Bob', 'A', 'F', '', 'Bob', 'D+', 'B-'],
+      ['Ann', 'B+', 'C-', '', 'Ann', 'B+', 'A']
     ]}
   end
 end

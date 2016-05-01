@@ -14,8 +14,8 @@ module BloXL
       Roo::Spreadsheet.open(path).sheet(0).to_a
     }
     it{should == [
-      ['test', nil, 'love', 'me', 'tenderly'],
-      ['me'  , nil, nil   , nil , nil       ]
+      ['test', '', 'love', 'me', 'tenderly'],
+      ['me'  , '', ''    , ''  , ''        ]
     ]}
   end
 end

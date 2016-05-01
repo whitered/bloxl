@@ -19,7 +19,7 @@ module BloXL
     def render axlsx_row
       options = {}
       options[:style] = style.axlsx_style(@value) unless style.nil?
-      axlsx_row.add_cell @value, options
+      axlsx_row.add_cell @value || '', options
     end
 
 
